@@ -1,0 +1,43 @@
+docs/.locks/
+__pycache__/
+*.pyc
+.venv/
+*.tmp
+.pytest_cache/
+.claude/handoffs/
+
+# --- phase 0 build artifacts and local state ---
+deploy/certs/
+deploy/backup/dumps/
+deploy/backup/keys/
+.env
+.local/
+.ruff_cache/
+.pyright/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+node_modules/
+web/dist/
+*.tsbuildinfo
+
+# stray folder from an unexpanded %SystemDrive% path; kept (never delete), not tracked
+%SystemDrive%/
+# --- work/bench: large third-party payloads, derived or downloaded locally ---
+work/bench/openstax/
+work/bench/openstax.tar.gz
+work/bench/kester-*.txt
+work/bench/perf/
+work/bench/bench.env
+
+# --- work/: fetched tool binaries and generated inventories over the size cap ---
+work/tools/
+work/binaries.json
+work/decompiled/
+
+# --- local harness state and review evidence not belonging to the repo ---
+.dsh/
+# harness transcripts and local settings, at any depth
+.claude/

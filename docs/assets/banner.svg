@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320" role="img" aria-labelledby="banner-title">
+  <title id="banner-title">Al-Mahmoud ERP — accounting-first software for Arabic-speaking businesses</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0c4036"/>
+      <stop offset="0.55" stop-color="#0a332c"/>
+      <stop offset="1" stop-color="#07241f"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#e6c968"/>
+      <stop offset="1" stop-color="#b98f2f"/>
+    </linearGradient>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M64 0H0v64" fill="none" stroke="#ffffff" stroke-opacity="0.05"/>
+    </pattern>
+  </defs>
+  <rect width="1280" height="320" fill="url(#bg)"/>
+  <rect width="1280" height="320" fill="url(#grid)"/>
+  <circle cx="1170" cy="30" r="230" fill="#ffffff" opacity="0.035"/>
+  <circle cx="110" cy="310" r="190" fill="#c9a227" opacity="0.06"/>
+  <rect width="1280" height="6" fill="url(#gold)"/>
+  <rect x="640" y="74" width="1.5" height="172" fill="#ffffff" opacity="0.14"/>
+
+  <g font-family="Segoe UI, Tahoma, Arial, sans-serif" text-anchor="end">
+    <text x="1216" y="140" fill="#ffffff" font-size="78" font-weight="700">المحمود</text>
+    <text x="1216" y="184" fill="#e9e0c9" font-size="27">نظام المحاسبة والمبيعات</text>
+    <text x="1216" y="226" fill="#c9a227" font-size="20">عربي أولاً · متعدد العملات · يعمل محلياً</text>
+    <text x="1216" y="278" fill="#7f9a90" font-size="16">الإصدار v0.2.0-rc1</text>
+  </g>
+
+  <g font-family="Segoe UI, Tahoma, Arial, sans-serif">
+    <text x="64" y="140" fill="#ffffff" font-size="56" font-weight="600">Al-Mahmoud ERP</text>
+    <text x="64" y="184" fill="#e9e0c9" font-size="25">Accounting-first ERP for Arabic-speaking businesses</text>
+    <text x="64" y="226" fill="#9fb7ad" font-size="19">Arabic / English · RTL-first · multi-currency · on-premise</text>
+    <text x="64" y="278" fill="#7f9a90" font-size="16">FastAPI · PostgreSQL 18 · React 19</text>
+  </g>
+</svg>

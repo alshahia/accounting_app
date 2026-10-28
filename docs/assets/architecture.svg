@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="620" viewBox="0 0 1240 620" role="img" aria-labelledby="arch-title">
+  <title id="arch-title">Al-Mahmoud ERP deployment architecture: browser SPA, Nginx TLS gateway, FastAPI API, PostgreSQL with row-level security, and the platform services around them</title>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#b98f2f"/>
+    </marker>
+  </defs>
+  <rect width="1240" height="620" fill="#fbf9f4"/>
+  <rect x="0" y="0" width="1240" height="5" fill="#0b3a33"/>
+
+  <g font-family="Segoe UI, Tahoma, Arial, sans-serif">
+    <text x="40" y="56" fill="#0b3a33" font-size="26" font-weight="600">Deployment architecture</text>
+    <text x="1200" y="56" fill="#6b6353" font-size="15" text-anchor="end">single-node pilot · Docker Compose or the Windows offline bundle</text>
+
+    <!-- browser -->
+    <rect x="40" y="86" width="300" height="132" rx="14" fill="#ffffff" stroke="#ddd4c2"/>
+    <rect x="40" y="86" width="6" height="132" rx="3" fill="#0b3a33"/>
+    <text x="64" y="120" fill="#0b3a33" font-size="19" font-weight="600">Browser</text>
+    <text x="64" y="148" fill="#4f4a3e" font-size="15">React 19 + TypeScript SPA</text>
+    <text x="64" y="172" fill="#4f4a3e" font-size="15">Arabic RTL / English LTR</text>
+    <text x="64" y="196" fill="#4f4a3e" font-size="15">Playwright end-to-end suite</text>
+
+    <!-- gateway -->
+    <rect x="470" y="86" width="300" height="132" rx="14" fill="#ffffff" stroke="#ddd4c2"/>
+    <rect x="470" y="86" width="6" height="132" rx="3" fill="#0b3a33"/>
+    <text x="494" y="120" fill="#0b3a33" font-size="19" font-weight="600">Nginx gateway</text>
+    <text x="494" y="148" fill="#4f4a3e" font-size="15">TLS termination · HTTP/2</text>
+    <text x="494" y="172" fill="#4f4a3e" font-size="15">serves the built SPA</text>
+    <text x="494" y="196" fill="#4f4a3e" font-size="15">only published port (8080/8443)</text>
+
+    <!-- api -->
+    <rect x="900" y="86" width="300" height="132" rx="14" fill="#ffffff" stroke="#ddd4c2"/>
+    <rect x="900" y="86" width="6" height="132" rx="3" fill="#0b3a33"/>
+    <text x="924" y="120" fill="#0b3a33" font-size="19" font-weight="600">FastAPI 0.116</text>
+    <text x="924" y="148" fill="#4f4a3e" font-size="15">async SQLAlchemy 2</text>
+    <text x="924" y="172" fill="#4f4a3e" font-size="15">OpenAPI · RFC 9457 errors</text>
+    <text x="924" y="196" fill="#4f4a3e" font-size="15">JWT access + rotating refresh</text>
+
+    <line x1="340" y1="152" x2="458" y2="152" stroke="#b98f2f" stroke-width="2" marker-end="url(#arrow)"/>
+    <line x1="770" y1="152" x2="888" y2="152" stroke="#b98f2f" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <!-- database -->
+    <rect x="900" y="300" width="300" height="150" rx="14" fill="#ffffff" stroke="#ddd4c2"/>
+    <rect x="900" y="300" width="6" height="150" rx="3" fill="#b98f2f"/>
+    <text x="924" y="334" fill="#0b3a33" font-size="19" font-weight="600">PostgreSQL 18</text>
+    <text x="924" y="362" fill="#4f4a3e" font-size="15">forced row-level security</text>
+    <text x="924" y="386" fill="#4f4a3e" font-size="15">SET ROLE per tenant write</text>
+    <text x="924" y="410" fill="#4f4a3e" font-size="15">append-only audit trail</text>
+    <text x="924" y="434" fill="#4f4a3e" font-size="15">DB-enforced ledger invariants</text>
+    <line x1="1050" y1="218" x2="1050" y2="288" stroke="#b98f2f" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <!-- platform -->
+    <rect x="40" y="300" width="820" height="150" rx="14" fill="#ffffff" stroke="#ddd4c2"/>
+    <rect x="40" y="300" width="6" height="150" rx="3" fill="#0b3a33"/>
+    <text x="64" y="334" fill="#0b3a33" font-size="19" font-weight="600">Platform and delivery</text>
+        <text x="64" y="362" fill="#4f4a3e" font-size="15">Alembic migrations · up/down/up tested</text>
+    <text x="64" y="386" fill="#4f4a3e" font-size="15">Encrypted pg_dump + WAL archive</text>
+    <text x="64" y="410" fill="#4f4a3e" font-size="15">Restore drills · Docker Compose stack</text>
+    <text x="64" y="434" fill="#4f4a3e" font-size="15">Windows offline installer + bundle</text>
+    <text x="480" y="362" fill="#4f4a3e" font-size="15">CI · lint, types, tests, browser suite</text>
+    <text x="480" y="386" fill="#4f4a3e" font-size="15">Licence allow-list · CycloneDX SBOM</text>
+    <text x="480" y="410" fill="#4f4a3e" font-size="15">pip-audit dependency audit</text>
+    <text x="480" y="434" fill="#4f4a3e" font-size="15">Backup and restore runbooks in-tree</text>
+
+<line x1="40" y1="500" x2="1200" y2="500" stroke="#ddd4c2" stroke-width="1.5"/>
+    <text x="40" y="536" fill="#0b3a33" font-size="17" font-weight="600">Security baseline</text>
+    <text x="200" y="536" fill="#4f4a3e" font-size="15">Argon2id · TOTP + recovery codes · CSRF-protected refresh cookies · tenant-scoped row-level security</text>
+    <text x="40" y="566" fill="#4f4a3e" font-size="15">Immutable posted entries · append-only audit trail · RFC 9457 problem responses · Arabic PDF and RTL Excel exports</text>
+    <text x="40" y="600" fill="#8a887b" font-size="14">See docs/10-runbooks/ for install, backup/restore, tenant provisioning and incident procedures.</text>
+  </g>
+</svg>
