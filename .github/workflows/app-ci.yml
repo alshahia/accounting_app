@@ -1,0 +1,137 @@
+name: app-ci
+
+on: [push, pull_request]
+
+env:
+  MAHMOUD_ENVIRONMENT: test
+  MAHMOUD_DATABASE_URL: postgresql+asyncpg://almahmoud:postgres@127.0.0.1:55432/almahmoud_test
+  # The integration suite defaults to the development role; CI supplies its own.
+  MAHMOUD_TEST_DATABASE_URL: postgresql+asyncpg://almahmoud:postgres@127.0.0.1:55432/almahmoud_test
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: almahmoud
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: almahmoud_test
+        ports:
+          - 55432:5432
+        options: >-
+          --health-cmd "pg_isready -U almahmoud -d almahmoud_test"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.7.18"
+          enable-cache: true
+          python-version: "3.14"
+      - run: uv sync --locked
+      - run: uv run ruff format --check .
+      - run: uv run ruff check .
+      - run: uv run pyright
+      - run: uv run pytest -q
+      - name: Migration up/down/up roundtrip
+        run: |
+          uv run alembic upgrade head
+          uv run alembic downgrade 0005_posting
+          uv run alembic upgrade head
+      - run: uv run pytest -q -m integration
+      # The dossier validator reads analysis/ and work/, which exist only in the
+      # private tree; the public snapshot has neither, so the gate is skipped
+      # there instead of failing on a missing script (2026-10-27).
+      - name: Analysis and docs gate (private tree only)
+        if: ${{ hashFiles('work/scripts/check_analysis.py') != '' }}
+        run: uv run python work/scripts/check_analysis.py --root . --evidence --docs
+
+  web:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: almahmoud
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: almahmoud_test
+        ports:
+          - 55432:5432
+        options: >-
+          --health-cmd "pg_isready -U almahmoud -d almahmoud_test"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.7.18"
+          enable-cache: true
+          python-version: "3.14"
+      - uses: pnpm/action-setup@v4
+        with:
+          version: "11"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: pnpm
+          cache-dependency-path: web/pnpm-lock.yaml
+      - run: uv sync --locked
+      - name: Schema and demo seed for the browser tests
+        run: |
+          uv run alembic upgrade head
+          uv run python scripts/seed_demo.py
+      - name: Install web dependencies
+        working-directory: web
+        run: pnpm install --frozen-lockfile
+      - name: Typecheck and build
+        working-directory: web
+        run: |
+          pnpm typecheck
+          pnpm build
+      - name: Install Chromium
+        working-directory: web
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Browser smoke tests
+        working-directory: web
+        run: pnpm test:e2e
+
+  licences-sbom:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.7.18"
+          enable-cache: true
+          python-version: "3.14"
+      - uses: pnpm/action-setup@v4
+        with:
+          version: "11"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: pnpm
+          cache-dependency-path: web/pnpm-lock.yaml
+      - run: uv sync --locked
+      - name: Install web dependencies for the licence scan
+        working-directory: web
+        run: pnpm install --frozen-lockfile
+      - name: Licence allow-list gate
+        run: uv run python scripts/check_licences.py
+      - name: Dependency vulnerability audit
+        run: uv run pip-audit --progress-spinner off
+      - name: Generate CycloneDX SBOM and third-party notices
+        run: uv run python scripts/generate_sbom.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: |
+            build/sbom.json
+            THIRD_PARTY_NOTICES.md
+          if-no-files-found: error

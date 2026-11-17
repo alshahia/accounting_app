@@ -1,0 +1,40 @@
+name: almahmoud-erp-prod
+
+# Overlay that proves the stack runs without egress (T-31, AC-15).
+#   docker compose -f deploy/docker-compose.prod.yml -f deploy/docker-compose.offline.yml up -d
+#
+# The default network loses its gateway and DNS forwarding to the internet, so
+# nothing can be downloaded at start-up. Docker Desktop drops the embedded
+# resolver on internal networks in some builds, so the three service names the
+# stack needs are pinned as /etc/hosts entries on a fixed subnet; name
+# resolution never leaves the host.
+networks:
+  default:
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.31.250.0/24
+
+services:
+  db:
+    networks:
+      default:
+        ipv4_address: 172.31.250.10
+  migrate:
+    networks:
+      default:
+        ipv4_address: 172.31.250.11
+    extra_hosts:
+      - "db:172.31.250.10"
+  api:
+    networks:
+      default:
+        ipv4_address: 172.31.250.12
+    extra_hosts:
+      - "db:172.31.250.10"
+  gateway:
+    networks:
+      default:
+        ipv4_address: 172.31.250.13
+    extra_hosts:
+      - "api:172.31.250.12"

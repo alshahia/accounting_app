@@ -1,0 +1,82 @@
+[project]
+name = "almahmoud-erp"
+version = "0.2.0"
+description = "Clean-room, accounting-first ERP for Syria and Iraq first, then the GCC."
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "alembic>=1.16",
+    "argon2-cffi>=25.1",
+    "asyncpg>=0.30",
+    "fastapi>=0.116",
+    "pyjwt>=2.10",
+    "pydantic>=2.11",
+    "pydantic-settings>=2.10",
+    "sqlalchemy[asyncio]>=2.0.41",
+    "uvicorn[standard]>=0.35",
+    "reportlab>=4.2",
+    "openpyxl>=3.1",
+    "arabic-reshaper>=3.0",
+    "python-bidi>=0.6",
+    "python-multipart>=0.0.32",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28",
+    "pip-audit>=2.10.1",
+    "psutil>=7.2.2",
+    "pyright>=1.1.405",
+    "pytest>=8.4",
+    "pytest-asyncio>=1.1",
+    "ruff>=0.12",
+]
+
+[tool.ruff]
+target-version = "py314"
+line-length = 100
+src = ["app", "tests", "migrations"]
+# The context pack and the destroyed-corpus evidence scripts are not part of
+# the application source tree.
+extend-exclude = ["analysis", "work", "scripts", "docs", "_templates", ".local", "deploy"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "B", "SIM", "RUF", "ASYNC", "DTZ", "S", "C4", "PT"]
+ignore = ["S101"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app", "tests"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S105", "S106"]
+"migrations/**" = ["E501"]
+# Alembic's template imports op/sa unconditionally; a generated revision may not
+# use both.
+"migrations/versions/*" = ["F401"]
+# Vendored copy of the review-room skill's transcript builder. Its long lines are
+# HTML template literals; wrapping them would make the emitted page harder to
+# compare against the skill's own copy.
+"review-room/build_transcript.py" = ["E501"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.pyright]
+include = ["app"]
+exclude = [".venv", "migrations", "tests"]
+typeCheckingMode = "strict"
+pythonVersion = "3.14"
+venvPath = "."
+venv = ".venv"
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+pythonpath = ["."]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+addopts = "-m 'not integration'"
+markers = [
+    "integration: requires a running PostgreSQL database",
+]

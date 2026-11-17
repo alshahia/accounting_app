@@ -1,0 +1,32 @@
+# Keep the build context to product sources: the image installs its own
+# dependencies and compiles the frontend inside the build stages.
+.git
+.github
+.venv
+.local
+.dsh
+.claude
+.cursor
+__pycache__
+*.pyc
+.pytest_cache
+.ruff_cache
+.pyright
+.mypy_cache
+node_modules
+web/node_modules
+web/dist
+web/test-results
+web/playwright-report
+web/tsconfig.tsbuildinfo
+build
+dist
+work
+review-room
+analysis
+_templates
+docs
+rules
+tests
+*.md
+!.python-version

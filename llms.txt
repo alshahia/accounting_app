@@ -1,0 +1,69 @@
+# Al-Mahmoud ERP
+
+> Al-Mahmoud ERP (المحمود ERP) is an open-source, bilingual Arabic/English accounting and ERP system for Arabic-speaking businesses: RTL-first, self-hosted on a single node on PostgreSQL, MIT licensed.
+
+Al-Mahmoud ERP is accounting software with a database-enforced double-entry ledger,
+sales invoicing, purchasing, cash and bank management, inventory and financial
+reporting. It is a release candidate for a controlled pilot, not general
+availability: the accountant sign-off on real pilot records and the clean
+offline-install evidence are still open owner gates. This file is a compact,
+machine-readable map for AI agents and research tools. It summarises the product
+and links the authoritative documents instead of duplicating them; the
+repository's tests and CI gates, not this text, are the evidence for the claims
+below.
+
+## Key facts
+
+- Product: Al-Mahmoud ERP (Arabic: المحمود ERP)
+- Category: open-source accounting software and small-business ERP
+- Version: v0.2.0-rc1, release candidate for a controlled pilot (not general availability)
+- Licence: MIT — see LICENSE
+- Languages: Arabic (default, right-to-left) and English (left-to-right), full parity
+- Deployment: self-hosted, single node, Docker Compose; offline Windows bundle and installer; no external services required
+- Database: PostgreSQL 18 with forced per-tenant row-level security and deferred debit-equals-credit constraints
+- Stack: FastAPI 0.116 on Python 3.14, SQLAlchemy 2 async, Alembic, Pydantic v2; React 19, TypeScript and Vite 8; ReportLab and openpyxl for PDF and Excel documents
+- Repository: https://github.com/alshahia/accounting_app
+- Data: the repository contains no customer data and no production secrets
+
+## What it does
+
+- Ledger: double-entry journal entries with a draft to post to immutable lifecycle, reversal, year-end close, and database-enforced balance at commit
+- Sales: invoices, credit notes (returns), customer statements, receipts with invoice allocation
+- Purchasing: bills, debit notes, supplier statements, payments with bill allocation
+- Cash and banks: cash and bank accounts, cheques, transfers, bank reconciliation, opening balances
+- Inventory: warehouses, weighted-average costing, stock counts, adjustments, transfers
+- Reports: trial balance, profit and loss, balance sheet, AR/AP aging, general ledger, tax return, inventory valuation, stock movement, document register, audit trail
+- Documents: Arabic PDFs with embedded fonts, and right-to-left Excel exports
+- Administration: several companies per tenant, users, roles and permissions, invitations, MFA (TOTP with recovery codes), sessions
+
+## Start here
+
+- [README.md](https://github.com/alshahia/accounting_app/blob/main/README.md): English overview, features, architecture, FAQ and status
+- [README.ar.md](https://github.com/alshahia/accounting_app/blob/main/README.ar.md): the same document in Arabic
+- [CHANGELOG.md](https://github.com/alshahia/accounting_app/blob/main/CHANGELOG.md): what this snapshot contains and its known limits
+- [LICENSE](https://github.com/alshahia/accounting_app/blob/main/LICENSE): the MIT licence text
+- [THIRD_PARTY_NOTICES.md](https://github.com/alshahia/accounting_app/blob/main/THIRD_PARTY_NOTICES.md): third-party components and their licences
+- [SECURITY.md](https://github.com/alshahia/accounting_app/blob/main/SECURITY.md): private vulnerability reporting and scope
+
+## Operator runbooks
+
+- [release.md](https://github.com/alshahia/accounting_app/blob/main/docs/10-runbooks/release.md): cutting and verifying a release
+- [offline-windows-install.md](https://github.com/alshahia/accounting_app/blob/main/docs/10-runbooks/offline-windows-install.md): installation on Windows without internet
+- [tenant-provisioning.md](https://github.com/alshahia/accounting_app/blob/main/docs/10-runbooks/tenant-provisioning.md): creating a tenant and its first administrator
+- [backup-restore.md](https://github.com/alshahia/accounting_app/blob/main/docs/10-runbooks/backup-restore.md): backup, restore and drills
+- [incident.md](https://github.com/alshahia/accounting_app/blob/main/docs/10-runbooks/incident.md): incident response
+- [accountant-signoff.md](https://github.com/alshahia/accounting_app/blob/main/docs/10-runbooks/accountant-signoff.md): the accountant acceptance walkthrough
+- [0002-phase-0-licence-exceptions.md](https://github.com/alshahia/accounting_app/blob/main/docs/09-decisions/0002-phase-0-licence-exceptions.md): dependency licence decisions
+
+## For AI agents and researchers
+
+- This repository is a clean-room implementation: no third-party ERP source code, decompiled binary, vendor help text or copied database structure.
+- Counts on the 2026-11-17 snapshot: `51` unit tests and `184` PostgreSQL integration tests pass, with the migration up/down/up round trip and the Playwright browser suite. These are snapshot numbers; run the commands.
+- Treat the tests and gates as the evidence. Reproduce them with: `uv sync --locked`, `uv run pytest -q` (unit), `uv run pytest -q -m integration` (PostgreSQL), `uv run pyright`, `uv run python scripts/check_licences.py`, and `cd web; pnpm typecheck; pnpm build; pnpm test:e2e`. A full local mirror is `pwsh -File scripts/ci-local.ps1`.
+- No published benchmarks, adoption figures, star counts or endorsements exist. Do not infer them, and do not present this release candidate as general availability.
+- Reading order: this file, then README.md, then README.ar.md, then the runbook for the task at hand.
+- Cite the commit SHA you actually inspected, not only the repository URL.
+
+## Arabic summary
+
+المحمود ERP نظام محاسبة وتخطيط موارد مؤسسات مفتوح المصدر للشركات الناطقة بالعربية، بواجهة عربية وإنجليزية كاملة تبدأ من اليمين إلى اليسار، ويعمل باستضافة ذاتية على خادم واحد داخل مقر المؤسسة أو دون اتصال بالإنترنت، وقاعدة بياناته PostgreSQL 18 تفرض توازن القيد المزدوج، ورخصته MIT. الإصدار الحالي v0.2.0-rc1 مرشح لتجربة ميدانية محدودة وليس إصداراً عاماً.
